@@ -28,10 +28,11 @@ print("Starting Country-Level Cost Analysis...")
 # Load the dataset
 try:
     # Try the path used in the notebook
-    df = pd.read_csv("../../../data/imputed_full_matrix_at_centroid.csv")
+    df = pd.read_csv("../Data/imputed_full_matrix_at_centroid.csv")
+    # df = pd.read_csv("../../../data/imputed_full_matrix_at_centroid.csv")
 except FileNotFoundError:
     # If that fails, try the path used in the original script
-    df = pd.read_csv("imputed_full_matrix_at_centroid.csv")
+    df = pd.read_csv("../../../data/imputed_full_matrix_at_centroid.csv")
 
 print(f"Dataset loaded with {df.shape[0]} rows and {df.shape[1]} columns")
 

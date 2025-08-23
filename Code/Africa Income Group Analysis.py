@@ -4,107 +4,15 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load the full dataset
-file_path = r"wb_data_all_fields_final.csv"
+file_path = r"../Data/wb_data_all_fields_final.csv"
 df_filtered = pd.read_csv(file_path, keep_default_na = False)
 df_filtered.shape
-
-#%%
-#in case origin and destination continent columns have NaN values
-# df_filtered['origin_continent'] = df_filtered['origin_continent'].fillna('NA')
-# df_filtered['destination_continent'] = df_filtered['destination_continent'].fillna('NA')
-#%%
-# Full ISO3 to income group mapping
-income_map = {
-    'AFG': 'Low income', 'ALB': 'Upper middle income', 'DZA': 'Upper middle income', 'ASM': 'High income',
-    'AND': 'High income', 'AGO': 'Lower middle income', 'ATG': 'High income', 'ARG': 'Upper middle income',
-    'ARM': 'Upper middle income', 'ABW': 'High income', 'AUS': 'High income', 'AUT': 'High income',
-    'AZE': 'Upper middle income', 'BHS': 'High income', 'BHR': 'High income', 'BGD': 'Lower middle income',
-    'BRB': 'High income', 'BLR': 'Upper middle income', 'BEL': 'High income', 'BLZ': 'Upper middle income',
-    'BEN': 'Lower middle income', 'BMU': 'High income', 'BTN': 'Lower middle income', 'BOL': 'Lower middle income',
-    'BIH': 'Upper middle income', 'BWA': 'Upper middle income', 'BRA': 'Upper middle income', 'VGB': 'High income',
-    'BRN': 'High income', 'BGR': 'High income', 'BFA': 'Low income', 'BDI': 'Low income', 'CPV': 'Lower middle income',
-    'KHM': 'Lower middle income', 'CMR': 'Lower middle income', 'CAN': 'High income', 'CYM': 'High income',
-    'CAF': 'Low income', 'TCD': 'Low income', 'CHI': 'High income', 'CHL': 'High income', 'CHN': 'Upper middle income',
-    'COL': 'Upper middle income', 'COM': 'Lower middle income', 'COD': 'Low income', 'COG': 'Lower middle income',
-    'CRI': 'Upper middle income', 'CIV': 'Lower middle income', 'HRV': 'High income', 'CUB': 'Upper middle income',
-    'CUW': 'High income', 'CYP': 'High income', 'CZE': 'High income', 'DNK': 'High income', 'DJI': 'Lower middle income',
-    'DMA': 'Upper middle income', 'DOM': 'Upper middle income', 'ECU': 'Upper middle income', 'EGY': 'Lower middle income',
-    'SLV': 'Upper middle income', 'GNQ': 'Upper middle income', 'ERI': 'Low income', 'EST': 'High income',
-    'SWZ': 'Lower middle income', 'ETH': 'Low income', 'FRO': 'High income', 'FJI': 'Upper middle income',
-    'FIN': 'High income', 'FRA': 'High income', 'PYF': 'High income', 'GAB': 'Upper middle income',
-    'GMB': 'Low income', 'GEO': 'Upper middle income', 'DEU': 'High income', 'GHA': 'Lower middle income',
-    'GIB': 'High income', 'GRC': 'High income', 'GRL': 'High income', 'GRD': 'Upper middle income',
-    'GUM': 'High income', 'GTM': 'Upper middle income', 'GIN': 'Lower middle income', 'GNB': 'Low income',
-    'GUY': 'High income', 'HTI': 'Lower middle income', 'HND': 'Lower middle income', 'HKG': 'High income',
-    'HUN': 'High income', 'ISL': 'High income', 'IND': 'Lower middle income', 'IDN': 'Upper middle income',
-    'IRN': 'Upper middle income', 'IRQ': 'Upper middle income', 'IRL': 'High income', 'IMN': 'High income',
-    'ISR': 'High income', 'ITA': 'High income', 'JAM': 'Upper middle income', 'JPN': 'High income',
-    'JOR': 'Lower middle income', 'KAZ': 'Upper middle income', 'KEN': 'Lower middle income', 'KIR': 'Lower middle income',
-    'PRK': 'Low income', 'KOR': 'High income', 'XKX': 'Upper middle income', 'KWT': 'High income',
-    'KGZ': 'Lower middle income', 'LAO': 'Lower middle income', 'LVA': 'High income', 'LBN': 'Lower middle income',
-    'LSO': 'Lower middle income', 'LBR': 'Low income', 'LBY': 'Upper middle income', 'LIE': 'High income',
-    'LTU': 'High income', 'LUX': 'High income', 'MAC': 'High income', 'MDG': 'Low income', 'MWI': 'Low income',
-    'MYS': 'Upper middle income', 'MDV': 'Upper middle income', 'MLI': 'Low income', 'MLT': 'High income',
-    'MHL': 'Upper middle income', 'MRT': 'Lower middle income', 'MUS': 'Upper middle income', 'MEX': 'Upper middle income',
-    'FSM': 'Lower middle income', 'MDA': 'Upper middle income', 'MCO': 'High income', 'MNG': 'Upper middle income',
-    'MNE': 'Upper middle income', 'MAR': 'Lower middle income', 'MOZ': 'Low income', 'MMR': 'Lower middle income',
-    'NAM': 'Upper middle income', 'NRU': 'High income', 'NPL': 'Lower middle income', 'NLD': 'High income',
-    'NCL': 'High income', 'NZL': 'High income', 'NIC': 'Lower middle income', 'NER': 'Low income',
-    'NGA': 'Lower middle income', 'MKD': 'Upper middle income', 'MNP': 'High income', 'NOR': 'High income',
-    'OMN': 'High income', 'PAK': 'Lower middle income', 'PLW': 'High income', 'PAN': 'High income',
-    'PNG': 'Lower middle income', 'PRY': 'Upper middle income', 'PER': 'Upper middle income',
-    'PHL': 'Lower middle income', 'POL': 'High income', 'PRT': 'High income', 'PRI': 'High income',
-    'QAT': 'High income', 'ROU': 'High income', 'RUS': 'High income', 'RWA': 'Low income',
-    'WSM': 'Lower middle income', 'SMR': 'High income', 'STP': 'Lower middle income', 'SAU': 'High income',
-    'SEN': 'Lower middle income', 'SRB': 'Upper middle income', 'SYC': 'High income', 'SLE': 'Low income',
-    'SGP': 'High income', 'SXM': 'High income', 'SVK': 'High income', 'SVN': 'High income', 'SLB': 'Lower middle income',
-    'SOM': 'Low income', 'ZAF': 'Upper middle income', 'SSD': 'Low income', 'ESP': 'High income',
-    'LKA': 'Lower middle income', 'KNA': 'High income', 'LCA': 'Upper middle income', 'MAF': 'High income',
-    'VCT': 'Upper middle income', 'SDN': 'Low income', 'SUR': 'Upper middle income', 'SWE': 'High income',
-    'CHE': 'High income', 'SYR': 'Low income', 'TWN': 'High income', 'TJK': 'Lower middle income',
-    'TZA': 'Lower middle income', 'THA': 'Upper middle income', 'TLS': 'Lower middle income',
-    'TGO': 'Low income', 'TON': 'Upper middle income', 'TTO': 'High income', 'TUN': 'Lower middle income',
-    'TUR': 'Upper middle income', 'TKM': 'Upper middle income', 'TCA': 'High income', 'TUV': 'Upper middle income',
-    'UGA': 'Low income', 'UKR': 'Upper middle income', 'ARE': 'High income', 'GBR': 'High income',
-    'USA': 'High income', 'URY': 'High income', 'UZB': 'Lower middle income', 'VUT': 'Lower middle income',
-    'VNM': 'Lower middle income', 'VIR': 'High income', 'PSE': 'Lower middle income', 'YEM': 'Low income',
-    'ZMB': 'Lower middle income', 'ZWE': 'Lower middle income'
-}
-
-income_map.update({
-    'VEN': 'Upper middle income',
-    'AIA': 'High income',
-    'MSR': 'High income',
-    'NIU': 'High income',
-    'GLP': 'High income',
-    'COK': 'High income',
-    'BES': 'High income',
-    'CXR': 'High income',
-    'FLK': 'High income',
-    'NFK': 'High income',
-    'BLM': 'High income',
-    'SHN': 'Upper middle income',
-    'SPM': 'High income',
-    'TKL': 'High income',
-    'ESH': 'Lower middle income'
-})
-
-# Apply mapping
-df_filtered['income_group'] = df_filtered['origin_ISO'].map(income_map)
-
-#%%
-# Check for missing mappings
-missing = df_filtered[df_filtered['income_group'].isna()]['origin_ISO'].unique()
-print("Missing ISO codes:", missing)
-
-# Preview the mapped column
-print(df_filtered[['origin_ISO', 'income_group']].drop_duplicates().sort_values('origin_ISO').head(20))
-
 # # Save to new CSV
 # output_path = r"C:\Users\bsiva\Downloads\wb_data_all_fields_with_income_group.csv"
 # df_filtered.to_csv(output_path, index=False)
 # print(f"Updated file saved to: {output_path}")
 
+#%%
 df_filtered_africa = df_filtered[df_filtered['origin_continent'] == 'AF'].copy()
 
 # Standardize income group labels (optional but helpful)

@@ -49,9 +49,9 @@ print("Starting African Exports Analysis...")
 
 # Load the dataset
 try:
-    df = pd.read_csv("imputed_full_matrix_at_centroid.csv")
+    df = pd.read_csv("../Data/imputed_full_matrix_at_centroid.csv")
 except FileNotFoundError:
-    df = pd.read_csv("../../../data/imputed_full_matrix_at_centroid.csv")
+    df = pd.read_csv("./Data/imputed_full_matrix_at_centroid.csv")
 
 print(f"Full dataset loaded with {df.shape[0]} rows and {df.shape[1]} columns")
 

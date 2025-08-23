@@ -1,18 +1,13 @@
 #%%
 import pandas as pd
 import numpy as np
-import json
-import pycountry
-import pycountry_convert as pc
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.ensemble import IsolationForest
-from category_encoders import TargetEncoder
-from sklearn.preprocessing import LabelEncoder
 #%%
 pd.set_option('display.max_columns', None)
 #%%
-df = pd.read_csv("wb_data_all_fields_final.csv", keep_default_na = False)
+df = pd.read_csv("../Data/wb_data_all_fields_final.csv", keep_default_na = False)
 # %%
 df.shape
 # %%
