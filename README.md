@@ -2,7 +2,7 @@
 _A World Bank project analyzing transport costs, anomalies, and opportunities using the GTCDIT dataset._
 
 This repository contains Python scripts and reports used to process, analyze, and visualize international transport costs, with a special focus on African exporters.  
-The workflow builds on the **Global Transport Costs Dataset for International Trade (GTCDIT)** (2016–2021), and adds derived features, anomaly detection, classification, and targeted Africa-specific studies.
+The workflow builds on the **Global Transport Costs Dataset for International Trade (GTCDIT)**, and adds derived features, anomaly detection, classification, and targeted Africa-specific studies.
 
 ---
 
