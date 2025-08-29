@@ -10,17 +10,17 @@ african_countries = ["DZA", "AGO", "BEN", "BWA", "BFA", "BDI", "CMR", "CPV", "CA
                      "TUN", "UGA", "TZA", "ZMB", "ZWE"]
 
 # Path to the data file
-file_path = "/Users/abishekchiffon/Documents/Technical/Masters/sem 4/captsone/data/imputed_full_matrix_at_centroid.csv"
+file_path = "../Data/imputed_full_matrix_at_centroid.csv"
 
 # Output file path
-output_path = "/Users/abishekchiffon/Documents/Technical/Masters/sem 4/captsone/data/africa_transport_costs.csv"
+output_path = "../Data/africa_transport_costs.csv"
 
 print("Reading the dataset...")
 # Read the CSV file
 # Use low_memory=False because the dataset is large with mixed data types
 df = pd.read_csv(file_path, low_memory=False)
 
-print("Filtering for African countries as origin...")
+print("Filtering for African countries as origin...")  
 # Filter the dataset to include only African countries as origin
 africa_df = df[df['origin_ISO'].isin(african_countries)]
 
@@ -31,7 +31,7 @@ avg_cost_df = africa_df.groupby(['origin_ISO', 'destination_ISO', 'IFM_HS', 'Mod
 
 # Rename columns for clarity
 avg_cost_df.rename(columns={
-    'Unit logistics costs ($/ton)': 'avg_unit_cost_per_ton'
+    'Unit logistics costs ($/ton)': 'avg_unit_cost_per_ton'  
 }, inplace=True)
 
 print(f"Saving results to {output_path}...")

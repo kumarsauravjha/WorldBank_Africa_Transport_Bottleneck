@@ -15,10 +15,11 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.class_weight import compute_sample_weight
 import joblib
 import pickle
+import os
 #%%
 pd.set_option('display.max_columns', None)
 #%%
-df = pd.read_csv("wb_data_all_fields_final.csv")
+df = pd.read_csv("../Data/wb_data_all_fields_final.csv")
 # %%
 df.shape
 # %%
@@ -54,7 +55,7 @@ print(f"Original rows: {df_filtered.shape[0]:,}")
 print(f"Cleaned rows: {clean_df.shape[0]:,}")
 # %%
 
-with open('centroid_json/country-centroids.json','r') as f:
+with open('../Data/centroid_json/country-centroids.json','r') as f:
     centroids = json.load(f)
 iso_centroids = {c['alpha3']:(c['latitude'],c['longitude']) for c in centroids}
 
@@ -178,7 +179,8 @@ print(confusion_matrix(le.inverse_transform(y_test), le.inverse_transform(y_pred
 # grid.best_params_
 #%%
 # 7. Save
-joblib.dump(best,'mode_predictor_xgb.pkl')
+os.makedirs('model pkl files', exist_ok=True)
+joblib.dump(model,'model pkl files/mode_predictor_xgb.pkl')
 
 #%%
 # # Example input
@@ -229,7 +231,6 @@ def predict_mode(user_input_df):
     return result
 
 
-
 result = predict_mode(pd.DataFrame([{
     'origin_ISO': 'KEN',
     'destination_ISO': 'UGA',
@@ -237,26 +238,22 @@ result = predict_mode(pd.DataFrame([{
     'IFM_HS': '1001'
 }]))
 print("Predicted:", result)
-
-
-
-
 # %%
 # Save models and encoders
-joblib.dump(model, r'final presentation\gradio\model.pkl')
+joblib.dump(model, r'model pkl files/model.pkl')
 #%%
-joblib.dump(enc_hs, r'final presentation\gradio\enc_hs.pkl')
-joblib.dump(enc_ship, r'final presentation\gradio\enc_ship.pkl')
-joblib.dump(enc_route, r'final presentation\gradio\enc_route.pkl')
+joblib.dump(enc_hs, r'model pkl files/enc_hs.pkl')
+joblib.dump(enc_ship, r'model pkl files/enc_ship.pkl')
+joblib.dump(enc_route, r'model pkl files/enc_route.pkl')
 
 # Save lookup dicts
-with open(r'final presentation\gradio\shiptype_lookup.pkl', 'wb') as f:
+with open(r'model pkl files/shiptype_lookup.pkl', 'wb') as f:
     pickle.dump(shiptype_lookup, f)
 
-with open(r'final presentation\gradio\distance_lookup.pkl', 'wb') as f:
+with open(r'model pkl files/distance_lookup.pkl', 'wb') as f:
     pickle.dump(distance_lookup, f)
 # %%
-joblib.dump(le, r'final presentation\gradio\label_encoder.pkl')
+joblib.dump(le, r'model pkl files/label_encoder.pkl')
 # %%
 # after you load your training DataFrame `df_train` with columns 
 # ['origin_ISO','TransportMode'] you do:
@@ -269,7 +266,7 @@ modes_by_origin = (
 
 #%%
 # e.g. modes_by_origin["USA"] == array(["Air","Sea","Road"], dtype=object
-with open(r'final presentation\gradio\modes_by_origin.pkl',"wb") as f:
+with open(r'model pkl files/modes_by_origin.pkl',"wb") as f:
     pickle.dump(modes_by_origin, f)
 
 # %%

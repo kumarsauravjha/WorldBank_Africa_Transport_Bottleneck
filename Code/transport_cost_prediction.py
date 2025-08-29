@@ -35,7 +35,7 @@ print("Starting Transport Cost Prediction Modeling...")
 
 # Load the dataset
 try:
-    df = pd.read_csv("imputed_full_matrix_at_centroid.csv")
+    df = pd.read_csv("../Data/imputed_full_matrix_at_centroid.csv")
 except FileNotFoundError:
     df = pd.read_csv("../../../data/imputed_full_matrix_at_centroid.csv")
 
@@ -335,8 +335,11 @@ print("4. Possible applications include route optimization, mode selection, and 
 
 # Save the model for future use
 import pickle
+import os
+
+os.makedirs('model pkl files', exist_ok=True)
 try:
-    with open('transport_cost_prediction_model.pkl', 'wb') as file:
+    with open('model pkl files/transport_cost_prediction_model.pkl', 'wb') as file:
         pickle.dump(best_model, file)
     print("\nModel saved successfully as 'transport_cost_prediction_model.pkl'")
 except Exception as e:

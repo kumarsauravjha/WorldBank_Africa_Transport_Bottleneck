@@ -1,3 +1,4 @@
+#%%
 """
 Dependency Loop Analysis for African Exports
 ============================================
@@ -32,12 +33,22 @@ african_countries = [
     "MAR", "MOZ", "NAM", "NER", "NGA", "REU", "RWA", "STP", "SEN", "SYC", "SLE",
     "SOM", "ZAF", "SSD", "SDN", "SWZ", "TZA", "TGO", "TUN", "UGA", "ESH", "ZMB", "ZWE"
 ]
+# Define North American countries
+north_american_countries = ['USA', 'CAN', 'MEX']
+# Compare freight rates between Africa and other regions
+regions = {
+    'Africa': african_countries,
+    'North America': north_american_countries,
+    'Asia': ['CHN', 'JPN', 'KOR', 'IND', 'IDN', 'THA', 'MYS', 'SGP', 'VNM', 'PHL', 'PAK', 'BGD'],
+    'Europe': ['DEU', 'FRA', 'GBR', 'ITA', 'ESP', 'NLD', 'BEL', 'CHE', 'AUT', 'PRT', 'SWE', 'NOR', 'FIN', 'DNK', 'IRL', 'LUX'],
+}
 
 print("Starting Dependency Loop Analysis for African Exports...")
 
+#%%
 # Load the dataset
 try:
-    df = pd.read_csv("imputed_full_matrix_at_centroid.csv")
+    df = pd.read_csv("../Data/imputed_full_matrix_at_centroid.csv")
 except FileNotFoundError:
     df = pd.read_csv("../../../../../data/imputed_full_matrix_at_centroid.csv")
 
@@ -47,8 +58,7 @@ print(f"Full dataset loaded with {df.shape[0]} rows and {df.shape[1]} columns")
 df_africa = df[df['origin_ISO'].isin(african_countries)]
 print(f"African exports dataset: {df_africa.shape[0]} rows ({df_africa.shape[0]/df.shape[0]:.1%} of total data)")
 
-# Define North American countries
-north_american_countries = ['USA', 'CAN', 'MEX']
+
 
 # Define raw vs processed goods categories
 raw_commodities = ['Crude oil', 'Coal', 'Gas', 'Rice_crops', 'Other_mining', 'Other_minerals', 'Food']
@@ -62,18 +72,14 @@ df_africa['commodity_type'] = df_africa['IFM_HS'].apply(
 # Filter for imports to Africa (destinations in Africa)
 df_africa_imports = df[df['destination_ISO'].isin(african_countries)]
 
+df_africa_imports['origin_region'] = df_africa_imports['origin_ISO'].apply(
+    lambda x: next((region for region, countries in regions.items() if x in countries), 'Other'))
+
+#%%
 #############################
 # PART 1: HIGH FREIGHT RATES FOR AFRICAN EXPORTS
 #############################
 print("\n\n===== 1. HIGH FREIGHT RATES FOR AFRICAN EXPORTS =====")
-
-# Compare freight rates between Africa and other regions
-regions = {
-    'Africa': african_countries,
-    'North America': north_american_countries,
-    'Asia': ['CHN', 'JPN', 'KOR', 'IND', 'IDN', 'THA', 'MYS', 'SGP', 'VNM', 'PHL', 'PAK', 'BGD'],
-    'Europe': ['DEU', 'FRA', 'GBR', 'ITA', 'ESP', 'NLD', 'BEL', 'CHE', 'AUT', 'PRT', 'SWE', 'NOR', 'FIN', 'DNK', 'IRL', 'LUX'],
-}
 
 # Add region classifications
 df['origin_region'] = df['origin_ISO'].apply(
@@ -120,6 +126,7 @@ plt.tight_layout()
 plt.savefig(f"{output_dir}/freight_rates_raw_vs_processed.png")
 plt.close()
 
+#%%
 #############################
 # PART 2: VALUE ADDITION HAPPENS ABROAD
 #############################
@@ -184,6 +191,7 @@ plt.tight_layout()
 plt.savefig(f"{output_dir}/raw_exports_destinations.png")
 plt.close()
 
+#%%
 #############################
 # PART 3: COSTLY TO BUY BACK PROCESSED GOODS
 #############################
@@ -284,6 +292,7 @@ try:
 except Exception as e:
     print(f"Error creating export-import comparison: {e}")
 
+#%%
 #############################
 # PART 4: THE DEPENDENCY LOOP - COMBINED VISUALIZATION
 #############################
